@@ -1,0 +1,28 @@
+{
+  "name": "paytmnode",
+  "version": "1.0.0",
+  "description": ">> Accept request at \r >> CallBack to http://localhost:3000/viewBooking?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "commit": "git-cz",
+    "prettier:check": "prettier --check 'src/**/*.{js,mdx}'",
+    "validate": "run-s test lint prettier:check",
+    "prerelease": "git checkout master && git pull origin master && npm i && run-s validate styleguide:build && git-authors-cli && git add .",
+    "release": "standard-version -a",
+    "postrelease": "run-s release:*",
+    "release:tags": "git push --follow-tags origin master",
+    "release:github": "conventional-github-releaser -p angular",
+    "ci:validate": "rm -rf node_modules && npm ci && npm run validate"
+  },
+  "keywords": [],
+  "author": "aps",
+  "license": "ISC",
+  "dependencies": {
+    "cf-client3": "0.0.1",
+    "cf-http-client": "^1.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {}
+}

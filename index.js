@@ -13,6 +13,8 @@ const parseJson = express.json({ extended: false });
 
 const PORT = process.env.PORT || 4100;
 
+app.get('/hi',(req, res) => {res.send("Hii from APS")})
+
 app.post("/paynow", [parseUrl, parseJson], (req, res) => {
   // Route for making payment
   console.log(">>>>",req.body);
@@ -22,9 +24,10 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
     customerId: req.body.name,
     customerEmail: req.body.email,
     customerPhone: req.body.phone,
-    customerRest: req.body.rest_name
+    customerProduct: req.body.product_name
 }
-if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.customerEmail || !paymentDetails.customerPhone || !paymentDetails.customerRest) {
+// res.send("Hii from APS")
+if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.customerEmail || !paymentDetails.customerPhone || !paymentDetails.customerProduct) {
     res.status(400).send('Payment failed')
 } else {
     var params = {};
@@ -35,7 +38,7 @@ if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.custo
     params['ORDER_ID'] = 'TEST_'  + paymentDetails.orderID;
     params['CUST_ID'] = paymentDetails.customerId;
     params['TXN_AMOUNT'] = paymentDetails.amount;
-    params['CALLBACK_URL'] = 'https://developerpayment.herokuapp.com/callback';
+    params['CALLBACK_URL'] = 'http://localhost:4100/callback';
     params['EMAIL'] = paymentDetails.customerEmail;
     params['MOBILE_NO'] = paymentDetails.customerPhone;
   
@@ -111,7 +114,7 @@ app.post("/callback", (req, res) => {
          post_res.on('end', function(){
            console.log('S2S Response: ', response, "\n");
            var _results = JSON.parse(response);
-           res.redirect(`http://localhost:3000/viewBooking?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`)
+           res.redirect(`http://localhost:3000/viewOrders?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`)
            });
        });
 
